@@ -38,7 +38,7 @@ app.get('/api/persons', (req, res) => {
 app.get('/info', (req, res) => {
     const personbookLength = db.length
     const requestDate = new Date()
-    console.log(requestDate.toISOString())
+    
     res.send(`<h1>Personbook has info for ${personbookLength} people</h1>
                <h1>${requestDate.toDateString()}</h1>`)
 })
