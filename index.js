@@ -3,7 +3,7 @@ const app = express()
 
 app.use(express.json())
 
-const db = [
+let db = [
     { 
       "id": 1,
       "name": "Arto Hellas", 
@@ -55,6 +55,26 @@ app.get('/info', (req, res) => {
     
     res.send(`<h1>Personbook has info for ${personbookLength} people</h1>
                <h1>${requestDate.toDateString()}</h1>`)
+})
+
+app.delete('/api/persons/:id', (req, res) => {
+    //Be careful when querying for id in the db, the req params are strings. Always make sure you know what the types
+    //of your data are. If unsure, do console log typeof
+    const id = Number(req.params.id)
+
+    console.log(db.map(p => p.id).includes(id))
+
+    if(db.map(p => p.id).includes(id)){
+        const filteredDb = db.filter(p => p.id != id)
+        db = filteredDb
+
+        res.status(204).end()
+        console.log('deleted')
+    }else{
+        res.status(404).end()
+        console.log('not found')
+    }
+    
 })
 
 const PORT = 3001
