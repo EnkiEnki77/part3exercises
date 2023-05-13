@@ -35,6 +35,20 @@ app.get('/api/persons', (req, res) => {
     res.json(db)
 })
 
+app.get('/api/persons/:id', (req, res) => {
+    const reqId = req.params.id
+    //If youre trying to respond with a specific item from the db based on the value of a param such as id than use array.find
+    //Then check if the evaluation is null or not if not then you can respond with the found item. Otherwise throw a 404
+    //status and end
+    const person = db.find(p => p.id == reqId)
+    
+    if(person != null){
+        res.json(person)
+    }else{
+        res.status(404).end()
+    }
+})
+
 app.get('/info', (req, res) => {
     const personbookLength = db.length
     const requestDate = new Date()
