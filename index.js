@@ -35,5 +35,13 @@ app.get('/api/persons', (req, res) => {
     res.json(db)
 })
 
+app.get('/info', (req, res) => {
+    const personbookLength = db.length
+    const requestDate = new Date()
+    console.log(requestDate.toISOString())
+    res.send(`<h1>Personbook has info for ${personbookLength} people</h1>
+               <h1>${requestDate.toDateString()}</h1>`)
+})
+
 const PORT = 3001
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
