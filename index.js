@@ -1,7 +1,9 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+app.use(morgan('tiny'))
 
 let db = [
     { 
@@ -90,6 +92,10 @@ app.post('/api/persons', (req, res) => {
         return res.status(400).json({
             error: 'number missing'
         })
+    }else if(db.map(p => p.name).includes(req.body.name)){
+        return res.status(400).json({
+            error: 'name must be unique'
+        })
     }
 
     const person = {
@@ -103,10 +109,18 @@ app.post('/api/persons', (req, res) => {
     res.json(person)
 })
 
+app.use(unknownEndpoint)
+
 function generateId(){
     const id = Math.floor(Math.random() * 1000000000)
 
     return id
+}
+
+function unknownEndpoint(req, res){
+  res.status(404).json({
+    error: 'Unknown endpoint'
+  })
 }
 
 const PORT = 3001
