@@ -77,5 +77,37 @@ app.delete('/api/persons/:id', (req, res) => {
     
 })
 
+app.post('/api/persons', (req, res) => {
+    if(req.body.name == undefined && req.body.number == undefined){
+        return res.status(400).json({
+            error: 'name and number missing'
+        })
+    }else if(req.body.name == undefined){
+        return res.status(400).json({
+            error: 'name missing'
+        })
+    }else if(req.body.number == undefined){
+        return res.status(400).json({
+            error: 'number missing'
+        })
+    }
+
+    const person = {
+        id: generateId(),
+        name: req.body.name,
+        number: req.body.number
+    }
+
+    db = db.concat(person)
+
+    res.json(person)
+})
+
+function generateId(){
+    const id = Math.floor(Math.random() * 1000000000)
+
+    return id
+}
+
 const PORT = 3001
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
