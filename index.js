@@ -5,6 +5,7 @@ const app = express()
 app.use(express.json())
 app.use(morgan('tiny'))
 morgan.token('data', (req, res) => JSON.stringify(req.body))
+app.use(express.static('build'))
 
 let db = [
     { 
