@@ -4,6 +4,7 @@ const app = express()
 
 app.use(express.json())
 app.use(morgan('tiny'))
+morgan.token('data', (req, res) => JSON.stringify(req.body))
 
 let db = [
     { 
@@ -123,5 +124,5 @@ function unknownEndpoint(req, res){
   })
 }
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
