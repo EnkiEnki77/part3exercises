@@ -6,8 +6,9 @@ if(process.argv.length < 3){
 }
 
 const password = process.argv[2]
+const dbName = 'phonebook'
 
-const url = `mongodb+srv://layman212:${password}@phonebook.pvv7mgq.mongodb.net/phonebook?retryWrites=true&w=majority`
+const url = `mongodb+srv://layman212:${password}@phonebook.pvv7mgq.mongodb.net/${dbName}?retryWrites=true&w=majority`
 
 mongoose.set('strictQuery', false)
 
@@ -18,23 +19,25 @@ const phoneNumberSchema = new mongoose.Schema({
     number: String
 })
 
-const PhoneNumber = mongoose.model('Phone number', phoneNumberSchema)
+const PhoneNumber = mongoose.model('Person', phoneNumberSchema)
 
  if(process.argv.length < 4){
     PhoneNumber.find({}).then( result => {
         console.log(result)
+        mongoose.connection.close()
     })
-    mongoose.connection.close()
+}else{
+    const phoneNumber = new PhoneNumber({
+        name: process.argv[3],
+        number: process.argv[4]
+    })
+    
+    
+    phoneNumber
+    .save()
+    .then(result => {
+        console.log(`added ${process.argv[3]} and her number ${process.argv[4]} to the phonebook`)
+        mongoose.connection.close()
+    })
 }
 
-const phoneNumber = new PhoneNumber({
-    name: process.argv[3],
-    number: process.argv[4]
-})
-
-phoneNumber
-.save()
-.then(result => {
-    console.log(`added ${process.argv[3]} and her number ${process.argv[4]} to the phonebook`)
-    mongoose.connection.close()
-})
