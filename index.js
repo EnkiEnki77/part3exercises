@@ -69,10 +69,6 @@ app.post('/api/persons', async (req, res) => {
         return res.status(400).json({
             error: 'number missing'
         })
-    }else if(await Phonebook.find({name: req.body.name}).then(result => result).length > 0){
-        return res.status(400).json({
-            error: 'name must be unique'
-        })
     }
 
     const person = new Phonebook({
