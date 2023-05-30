@@ -55,7 +55,8 @@ app.delete('/api/persons/:id', (req, res) => {
     
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', async (req, res) => {
+
     if(req.body.name == undefined && req.body.number == undefined){
         return res.status(400).json({
             error: 'name and number missing'
@@ -68,21 +69,22 @@ app.post('/api/persons', (req, res) => {
         return res.status(400).json({
             error: 'number missing'
         })
-    }else if(db.map(p => p.name).includes(req.body.name)){
+    }else if(await Phonebook.find({name: req.body.name}).then(result => result).length > 0){
         return res.status(400).json({
             error: 'name must be unique'
         })
     }
 
-    const person = {
-        id: generateId(),
+    const person = new Phonebook({
         name: req.body.name,
         number: req.body.number
-    }
+    })
 
-    db = db.concat(person)
-
-    res.json(person)
+    person.save()
+    .then(savedPerson => {
+        res.json(savedPerson)
+        console.log(savedPerson.name + 's number saved to the db')
+    })
 })
 
 app.use(unknownEndpoint)
