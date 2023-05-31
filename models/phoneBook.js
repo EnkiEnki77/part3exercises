@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 
 const url = process.env.MONGO_URI
+const see = 'eyes'
 
 mongoose.connect(url)
 .then(res => console.log('connected to mongo'))
