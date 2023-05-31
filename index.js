@@ -3,6 +3,8 @@ const morgan = require('morgan')
 const app = express()
 require('dotenv').config()
 const Phonebook = require('./models/phoneBook')
+const { unknownEndpoint, handleErrors } = require('./modules/middleware')
+
 app.use(express.json())
 app.use(morgan('tiny'))
 morgan.token('data', (req, res) => JSON.stringify(req.body))
@@ -35,24 +37,14 @@ app.get('/info', (req, res) => {
                <h1>${requestDate.toDateString()}</h1>`)
 })
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
     //Be careful when querying for id in the db, the req params are strings. Always make sure you know what the types
     //of your data are. If unsure, do console log typeof
-    const id = Number(req.params.id)
+    const id = req.params.id
 
-    console.log(db.map(p => p.id).includes(id))
-
-    if(db.map(p => p.id).includes(id)){
-        const filteredDb = db.filter(p => p.id != id)
-        db = filteredDb
-
-        res.status(204).end()
-        console.log('deleted')
-    }else{
-        res.status(404).end()
-        console.log('not found')
-    }
-    
+    Phonebook.findByIdAndDelete(id)
+    .then(result => res.status(204).end())
+    .catch(err => next(err))
 })
 
 app.post('/api/persons', async (req, res) => {
@@ -85,17 +77,7 @@ app.post('/api/persons', async (req, res) => {
 
 app.use(unknownEndpoint)
 
-function generateId(){
-    const id = Math.floor(Math.random() * 1000000000)
-
-    return id
-}
-
-function unknownEndpoint(req, res){
-  res.status(404).json({
-    error: 'Unknown endpoint'
-  })
-}
+app.use(handleErrors)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
