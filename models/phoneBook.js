@@ -14,7 +14,31 @@ const phoneBookSchema = new mongoose.Schema({
         minLength: 4,
         required: true
     },
-    number: String
+    number: {
+        type: String,
+        minLength: [8, 'Number must be at least 8 characters'],
+        required: [true, 'A number is required'],
+        validate: {
+            validator: function(v){
+                if(v.includes('-')){
+                    const numberParts = v.split('-')
+                    
+                    if(numberParts.length == 2){
+                        if(!Number.isNaN(Number(numberParts[0])) && !Number.isNaN(Number(numberParts[0]))){
+                            return numberParts[0].length > 2
+                        }else{
+                            return false
+                        }
+                    }else{
+                        return false
+                    }
+                }else{
+                    return false
+                }
+            },
+            message:props => `${props.value} is not a valid number`
+        }
+    }
 })
 
 phoneBookSchema.set('toJSON', {
