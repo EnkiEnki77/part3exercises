@@ -47,7 +47,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch(err => next(err))
 })
 
-app.post('/api/persons', async (req, res) => {
+app.post('/api/persons', async (req, res, next) => {
 
     if(req.body.name == undefined && req.body.number == undefined){
         return res.status(400).json({
@@ -73,6 +73,7 @@ app.post('/api/persons', async (req, res) => {
         res.json(savedPerson)
         console.log(savedPerson.name + 's number saved to the db')
     })
+    .catch(err => next(err))
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
