@@ -75,6 +75,20 @@ app.post('/api/persons', async (req, res) => {
     })
 })
 
+app.put('/api/persons/:id', (req, res, next) => {
+    const id = req.params.id
+    const body = req.body
+
+    const person = {
+        name: body.name,
+        number: body.number
+    }
+
+    Phonebook.findByIdAndUpdate(id, person, {new: true})
+    .then(result => res.status(200).json(result))
+    .catch(err => next(err))
+})
+
 app.use(unknownEndpoint)
 
 app.use(handleErrors)
