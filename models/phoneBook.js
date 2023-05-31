@@ -9,7 +9,11 @@ mongoose.connect(url)
 .catch(err => console.log('error connecting to mongo', err))
 
 const phoneBookSchema = new mongoose.Schema({
-    name: String,
+    name: {
+        type: String,
+        minLength: 4,
+        required: true
+    },
     number: String
 })
 
