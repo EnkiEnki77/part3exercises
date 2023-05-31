@@ -1,14 +1,16 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
 require('dotenv').config()
 const Phonebook = require('./models/phoneBook')
 const { unknownEndpoint, handleErrors } = require('./modules/middleware')
-
+app.use(express.static('build'))
 app.use(express.json())
+app.use(cors())
 app.use(morgan('tiny'))
 morgan.token('data', (req, res) => JSON.stringify(req.body))
-app.use(express.static('build'))
+
 
 app.get('/api/persons', (req, res) => {
     Phonebook.find({})
